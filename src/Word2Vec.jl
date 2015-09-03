@@ -1,5 +1,7 @@
 module Word2Vec
 
-# package code goes here
+using Compat
+
+include("wordvectors.jl")
 
 end # module
