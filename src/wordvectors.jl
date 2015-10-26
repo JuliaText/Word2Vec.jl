@@ -11,3 +11,29 @@ type WordVectors{T}
         new(vocab, vectors, clusters, vocab_hash)
     end
 end
+
+"""
+`index(wv, word)`
+
+Return the index of `word` in the WordVectors `wv`.
+"""
+index(wv::WordVectors, word) = v.vocab_hash[word]
+
+"""
+`get_vector(wv, word)`
+
+Return the vector for `word` in the WordVectors `wv`. 
+"""
+get_vector(wv::WordVectors, word) = (idx = wv.vocab_hash[word]; wv.vectors[idx])
+
+"""
+`cosine(wv, word, n=10)`
+
+Return the position of `n` neighbors of `word` and cosine similarity 
+"""
+function cosine(wv::WordVectors, word, n=10)
+    metrics = wv.vectors'*get_vector(wv, word)
+    topn_positions = sortperm(metrics, rev = true)[1:n]
+    topn_metrics = metrices[topn_positions]
+    return topn_postions, topn_metrices
+end
