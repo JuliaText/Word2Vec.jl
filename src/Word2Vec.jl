@@ -1,7 +1,13 @@
 module Word2Vec
 
-using Compat
+export
+    # type
+    WordVectors,
+    
+    # function
+    word2vec
 
+include("interface.jl")
 include("wordvectors.jl")
 
 end # module
