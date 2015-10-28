@@ -9,6 +9,9 @@ are pure Julia.
 
 ## Installation
 
-`Pkg.clone(https://github.com/weijianzhang/Word2Vec.jl)`
+```julia
+Pkg.clone(https://github.com/weijianzhang/Word2Vec.jl)
+Pkg.build("Word2Vec")
+```
 
 **Note**: Only linux and OS X are supported.
