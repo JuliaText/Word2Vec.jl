@@ -1,5 +1,8 @@
 using Word2Vec
 using Base.Test
 
-# write your own tests here
-@test 1 == 1
+ 
+big = joinpath(Pkg.dir("Word2Vec"), "data", "big.txt")
+word2vec(big, "bigvecs.txt")
+wv = wordvectors("bigvecs.txt") 
+rm("bigvecs.txt")

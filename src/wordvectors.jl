@@ -3,7 +3,7 @@ type WordVectors
     vectors::AbstractArray{AbstractFloat, 2} # the vectors calculated by word2vec
     vocab_hash::Dict{Any, Integer}
     function WordVectors(vocab, vectors)
-        vocab_hash = Dict{Any, Integer}()
+        vocab_hash = Dict{AbstractString, Integer}()
         for (i, word) in enumerate(vocab)
             vocab_hash[word] = i
         end
