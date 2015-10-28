@@ -1,10 +1,12 @@
 module Word2Vec
 
+import Base: show
+
 export
-    # type
+    # types
     WordVectors,
     
-    # function
+    # functions
     index, get_vector, cosine, vocabulary, cosine_similar_words,
     word2vec, wordvectors
 

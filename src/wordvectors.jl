@@ -11,12 +11,18 @@ type WordVectors
     end
 end
 
+function show(io::IO, wv::WordVectors)
+    num_words, len_vecs = size(wv.vectors)
+    print(io, "WordVectors $(num_words) words, $(len_vecs)-element vectors")
+end
+
 """
 `vocabulary(wv)` 
 
 Return all the vocabulary of the WordVectors `wv`.
 """
 vocabulary(wv::WordVectors) = wv.vocab
+
 
 """
 `index(wv, word)`

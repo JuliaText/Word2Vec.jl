@@ -35,26 +35,22 @@ Alpha: 0.000002  Progress: 100.04%  Words/thread/sec: 350.44k
 Now we can import the word vectors ``text8-vec.txt`` to Julia.
 
 ```julia
-julia> model = wordvectors("text8-vec.txt");
+julia> model = wordvectors("Downloads/text8-vec.txt")
+WordVectors 71291 words, 100-element vectors
+```
+The vector representation of a word can be obtained using
+``get_vector``.
+
+```julia
+julia> get_vector(model, "book")
+1x100 Array{AbstractFloat,2}:
+ 0.0371017  -0.025825  0.0345965  …  0.0148279  0.0223793  -0.0312822
 ```
 
 The cosine similarity, for example, can be computed using
 ``cosine_similar_words``.
 
 ```julia
-julia> cosine_similar_words(model, "dog")
-10-element Array{AbstractString,1}:
- "dog"    
- "cat"    
- "hound"  
- "goat"   
- "ass"    
- "rat"    
- "pig"    
- "hamster"
- "bee"    
- "dogs"   
-
 julia> cosine_similar_words(model, "book")
 10-element Array{AbstractString,1}:
  "book"   
@@ -68,3 +64,20 @@ julia> cosine_similar_words(model, "book")
  "bible"  
  "genesis"
 ```
+
+## References
+
+- Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean,
+  "Efficient Estimation of Word Representations in Vector Space",
+  *In Proceedings of Workshop at ICLR*, 2013.
+  [[pdf]](http://arxiv.org/pdf/1301.3781.pdf)
+
+- Tomas Mikolov, Ilya Sutskever, Kai Chen, Greg Corrado, and Jeffrey Dean.
+  "Distributed Representations of Words and Phrases and their
+  Compositionality", *In Proceedings of NIPS*, 2013.
+  [[pdf]](http://arxiv.org/pdf/1310.4546.pdf)
+
+- Tomas Mikolov, Wen-tau Yih, and Geoffrey Zweig,
+  "Linguistic Regularities in Continuous Space Word Representations",
+  *In Proceedings of NAACL HLT*, 2013.
+  [[pdf]](http://research.microsoft.com/pubs/189726/rvecs.pdf)
