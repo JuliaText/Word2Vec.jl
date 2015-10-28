@@ -1,6 +1,6 @@
 type WordVectors
     vocab::AbstractArray{AbstractString, 1} # vocabulary
-    vectors::AbstractArray{AbstractFloat, 2} # the vectors calculated by word2vec
+    vectors::AbstractArray{AbstractFloat, 2} # the vectors computed from word2vec
     vocab_hash::Dict{Any, Integer}
     function WordVectors(vocab, vectors)
         vocab_hash = Dict{AbstractString, Integer}()
@@ -11,6 +11,12 @@ type WordVectors
     end
 end
 
+"""
+`vocabulary(wv)` 
+
+Return all the vocabulary of the WordVectors `wv`.
+"""
+vocabulary(wv::WordVectors) = wv.vocab
 
 """
 `index(wv, word)`
@@ -32,12 +38,22 @@ get_vector(wv::WordVectors, word) = (idx = wv.vocab_hash[word]; wv.vectors[idx,:
 Return the position of `n` neighbors of `word` and cosine similarity 
 """
 function cosine(wv::WordVectors, word, n=10)
-    metrics = wv.vectors'*get_vector(wv, word)
-    topn_positions = sortperm(metrics, rev = true)[1:n]
-    topn_metrics = metrices[topn_positions]
-    return topn_postions, topn_metrices
+    metrics = wv.vectors*get_vector(wv, word)'
+    topn_positions = sortperm(metrics[:], rev = true)[1:n]
+    topn_metrics = metrics[topn_positions]
+    return topn_positions, topn_metrics
 end
 
+
+"""
+`cosine_similar_words(wv, word, n=10)`
+
+Return the top `n` most similar words to `word`.
+"""
+function cosine_similar_words(wv, word, n=10)
+    indx, metr = cosine(wv, word, n)
+    return vocabulary(wv)[indx]
+end
 
 """
 `wordvectors(fname)`
