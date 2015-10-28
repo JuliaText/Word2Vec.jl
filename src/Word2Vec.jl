@@ -5,7 +5,8 @@ export
     WordVectors,
     
     # function
-    word2vec
+    index, get_vector, cosine,
+    word2vec, wordvectors
 
 include("interface.jl")
 include("wordvectors.jl")

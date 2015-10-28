@@ -43,7 +43,7 @@
 """
 function word2vec(train, output; size=100, window=5, sample=1e-3, hs=0, 
                   negative=5, threads=12, iter=5, min_count=5, alpha=0.025,
-                  debug=2, binary=1, cbow=1, save_vocal=Union{}, 
+                  debug=2, binary=0, cbow=1, save_vocal=Union{}, 
                   read_vocab=Union{}, verbose=false,)
 
     command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
