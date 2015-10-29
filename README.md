@@ -20,7 +20,7 @@ Pkg.build("Word2Vec")
 ## Functions
 
 All exported functions are documented, i.e., we can type `? functionname`
-to get help. For a list of functions, see [here]().
+to get help. For a list of functions, see [here](https://github.com/weijianzhang/Word2Vec.jl/blob/master/doc/README.md).
 
 ## Examples
 
@@ -47,7 +47,7 @@ The vector representation of a word can be obtained using
 ``get_vector``.
 
 ```julia
-julia> get_vector(model, "book")
+julia> get_vector(model, "book")'
 1x100 Array{AbstractFloat,2}:
  0.0371017  -0.025825  0.0345965  …  0.0148279  0.0223793  -0.0312822
 ```
