@@ -12,7 +12,7 @@ type WordClusters
 end
 
 function show(io::IO, wc::WordClusters)
-    print(io, "WordClusters $(length(wc.vocab)) words")
+    print(io, "WordClusters $(length(wc.vocab)) words, $(length(unique(wc.clusters))) clusters")
 end
 
 """
@@ -43,6 +43,13 @@ index(wc::WordClusters, word) = wc.vocab_hash[word]
 Return the cluster number for a word in the vocabulary.
 """
 get_cluster(wc::WordClusters, word) = (idx = index(wc, word); wc.clusters[idx])
+
+"""
+`clusters(wc)`
+
+Return all the clusters from the WordClusters `wc`.
+"""
+clusters(wc::WordClusters) = unique(wc.clusters)
 
 """
 `get_words(wc, cluster)`
