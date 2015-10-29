@@ -17,6 +17,11 @@ Pkg.build("Word2Vec")
 
 **Note**: Only linux and OS X are supported.
 
+## Functions
+
+All exported functions are documented, i.e., we can type `? functionname`
+to get help. For a list of functions, see [here]().
+
 ## Examples
 
 We first download some text corpus, for example http://mattmahoney.net/dc/text8.zip.
@@ -35,7 +40,7 @@ Alpha: 0.000002  Progress: 100.04%  Words/thread/sec: 350.44k
 Now we can import the word vectors ``text8-vec.txt`` to Julia.
 
 ```julia
-julia> model = wordvectors("Downloads/text8-vec.txt")
+julia> model = wordvectors("text8-vec.txt")
 WordVectors 71291 words, 100-element vectors
 ```
 The vector representation of a word can be obtained using
@@ -47,7 +52,7 @@ julia> get_vector(model, "book")
  0.0371017  -0.025825  0.0345965  …  0.0148279  0.0223793  -0.0312822
 ```
 
-The cosine similarity, for example, can be computed using
+The cosine similarity of ``book``, for example, can be computed using
 ``cosine_similar_words``.
 
 ```julia
@@ -63,6 +68,20 @@ julia> cosine_similar_words(model, "book")
  "preface"
  "bible"  
  "genesis"
+```
+
+Word vectors have other interesting properties, including
+``vector("king") - vector("man") + vector("woman")`` is close to
+``vector("queen")``.
+
+```julia
+julia> analogy_words(model, ["king", "woman"], ["man"])
+5-element Array{AbstractString,1}:
+ "queen"    
+ "empress"  
+ "elizabeth"
+ "throne"   
+ "princess" 
 ```
 
 ## References
