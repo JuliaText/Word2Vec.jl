@@ -53,7 +53,7 @@ function word2vec(train::AbstractString, output::AbstractString;
 
     command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
     parameters = AbstractString[]
-    args = ["-train", "-output", "-size", "-window", "-simple", "-hs",
+    args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
             "-debug", "-binary", "-cbow"]
     values = [train, output, size, window, sample, hs, negative, threads,
@@ -133,7 +133,7 @@ function word2clusters(train::AbstractString, output::AbstractString,
                        verbose::Bool=false)
     command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
     parameters = AbstractString[]
-    args = ["-train", "-output", "-size", "-window", "-simple", "-hs",
+    args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
             "-debug", "-binary", "-cbow", "-classes"]
     values = [train, output, size, window, sample, hs, negative, threads,
