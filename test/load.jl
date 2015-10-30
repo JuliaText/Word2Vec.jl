@@ -1,4 +1,4 @@
-big = joinpath(Pkg.dir("Word2Vec"), "data", "big.txt")
+big = joinpath(dirname(@__FILE__),"..", "data", "big.txt")
 
 # wordvectors
 word2vec(big, "bigvecs.txt")
