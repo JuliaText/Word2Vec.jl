@@ -152,3 +152,34 @@ function word2clusters(train::AbstractString, output::AbstractString,
     end 
     run(`$(command) $(parameters)`)
 end
+
+"""
+`word2phrase(train, output; min_count=5, threshold=100, debug=2)`
+
+  Parameters for training:
+	train <file>
+		Use text data from <file> to train the model
+	output <file>
+		Use <file> to save the resulting word vectors / word 
+                clusters / phrases
+	min_count <Int>
+		This will discard words that appear less than <int> times; 
+                default is 5
+	threshold <AbstractFloat>
+		 The <AbstractFloat> value represents threshold for forming
+                 the phrases (higher means less phrases); default 100
+	debug <Int>
+		Set the debug mode (default = 2 = more info during training)
+"""
+function word2phrase(train::AbstractString, output::AbstractString;
+                     min_count::Int=5, threshold::Int=100, debug::Int=2)
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2phrase")
+    parameters = AbstractString[]
+    args = ["-train", "-output", "-min-count", "-threshold", "-debug"]
+    values = [train, output, min_count, threshold, debug]
+    for (arg, value) in zip(args, values)
+        push!(parameters, arg)
+        push!(parameters, string(value))
+    end
+    run(`$(command) $(parameters)`)
+end

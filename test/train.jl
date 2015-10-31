@@ -12,16 +12,21 @@ iter = rand(1:5)
 min_count = rand(1:5)
 alpha = 0.025
 debug = 2
+threshold = rand(50:100)
 # binary = rand(0:1)  # turn this on when binary file reader is implemented
 cbow = rand(0:1)
 classes = rand(30:100)
 save_vocab = "vocab.txt"
 read_vocab = "vocab.txt"
 
-word2vec(bigdata, "bigvecs.txt", size=vector_size, window=window, sample=sample,
+word2phrase(bigdata, "bigphrase", min_count=min_count, threshold=threshold,
+            debug=debug)
+
+word2vec("bigphrase", "bigvecs.txt", size=vector_size, window=window, sample=sample,
          hs=hs, negative=negative, threads=threads, iter=iter, 
          min_count=min_count, alpha=alpha, debug=debug, cbow=cbow, 
          save_vocab=save_vocab)
+rm("bigphrase")
 
 model = wordvectors("bigvecs.txt")
 len_vecs, num_words = size(model)
