@@ -69,7 +69,7 @@ Generate a WordClusters type object from the text file `fname`.
 """
 function wordclusters(fname::AbstractString)
     vocab = AbstractString[]
-    clusters = Integer[]
+    clusters = Int[]
     open(fname) do f
         entries = split(strip(readline(f)), ' ')
         while length(entries) == 2

@@ -1,19 +1,22 @@
-type WordVectors
-    vocab::AbstractArray{AbstractString, 1} # vocabulary
-    vectors::AbstractArray{AbstractFloat, 2} # the vectors computed from word2vec
-    vocab_hash::Dict{AbstractString, Integer}
-    function WordVectors(vocab, vectors)
-        vocab_hash = Dict{AbstractString, Integer}()
-        for (i, word) in enumerate(vocab)
-            vocab_hash[word] = i
-        end
-        new(vocab, vectors, vocab_hash)
+type WordVectors{S<:AbstractString, T<:Real, H<:Integer}
+    vocab::AbstractArray{S, 1} # vocabulary
+    vectors::AbstractArray{T, 2} # the vectors computed from word2vec
+    vocab_hash::Dict{S, H}    
+end
+function WordVectors{S, T}(vocab::AbstractArray{S,1}, 
+                           vectors::AbstractArray{T,2})
+    length(vocab) == size(vectors, 2) || 
+        throw(DimensionMismatch("Dimension of vocab and vectors are inconsistent."))
+    vocab_hash = Dict{S, Int}()
+    for (i, word) in enumerate(vocab)
+        vocab_hash[word] = i
     end
+    WordVectors(vocab, vectors, vocab_hash)
 end
 
-function show(io::IO, wv::WordVectors)
+function show{S,T}(io::IO, wv::WordVectors{S,T})
     len_vecs, num_words = size(wv.vectors)
-    print(io, "WordVectors $(num_words) words, $(len_vecs)-element vectors")
+    print(io, "WordVectors $(num_words) words, $(len_vecs)-element $(T) vectors")
 end
 
 """
@@ -129,28 +132,30 @@ end
 Return the top `n` words computed by analogy similarity between
 positive words `pos` and negaive words `neg`. from the WordVectors `wv`. 
 """
-function analogy_words(wv, pos, neg, n=5)
+function analogy_words(wv::WordVectors, pos, neg, n=5)
     indx, metr = analogy(wv, pos, neg, n)
     return vocabulary(wv)[indx]
 end
 
 
 """
-`wordvectors(fname, kind=:text)`
+`wordvectors(fname [,type=Float64][, kind=:text])`
 
-Generate a WordVectors type object from the file `fname`.
+Generate a WordVectors type object from the file `fname`, where
+`type` is the element of the vectors.
 The file format can be either text (kind=`:text`) or 
 binary (kind=`:binary`).
 """
-function wordvectors(fname::AbstractString, kind::Symbol=:text)
+function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}, kind::Symbol=:text)
     if kind == :binary
-        return _from_binary(fname)
+        return _from_binary(T, fname)
     elseif kind == :text
-        return _from_text(fname)
+        return _from_text(T, fname)
     else
         error("Unknown kind $(kind)")
     end
 end
+wordvectors(frame::AbstractString, kind::Symbol=:text) = wordvectors(frame, Float64, kind)
 
 # generate a WordVectors object from binary file
 function _from_binary(filename::AbstractString) 
@@ -158,20 +163,21 @@ function _from_binary(filename::AbstractString)
 end
 
 # generate a WordVectors object from text file
-function _from_text(filename::AbstractString)
+function _from_text{T}(::Type{T}, filename::AbstractString)
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
         vocab = Array(AbstractString, vocab_size)
-        vectors = Array(AbstractFloat, vector_size, vocab_size)
-        for (i, line) in enumerate(readlines(f))
+        vectors = Array(T, vector_size, vocab_size)
+        @inbounds for (i, line) in enumerate(readlines(f))
             #println(line)
             line = strip(line)
             parts = split(line, ' ')
             word = parts[1]
-            vector = float(parts[2:end])
+            vector = map(x-> parse(T, x), parts[2:end])
+            vec_norm = norm(vector)
             vocab[i] = word
-            vectors[:,i] = vector./norm(vector) #unit vector
+            vectors[:, i] = vector./vec_norm  #unit vector
         end
        return WordVectors(vocab, vectors) 
     end    

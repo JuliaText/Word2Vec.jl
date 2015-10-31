@@ -8,7 +8,7 @@ export
     
     # functions
     index, get_vector, cosine, vocabulary, in_vocabulary,
-    cosine_similar_words, analogy, analogy_words,
+    cosine_similar_words, analogy, analogy_words, size,
     word2vec, wordvectors, similarity, get_cluster, get_words,
     clusters, word2clusters, wordclusters
 

@@ -1,7 +1,8 @@
 # test various model functions 
 
 # word vectors
-model = wordvectors("bigvecs.txt") 
+model = wordvectors("bigvecs.txt", Float32)
+println(model) 
 rm("bigvecs.txt")
 rm("vocab.txt")
 
@@ -26,13 +27,14 @@ word4 = words[w4_indx]
 @test index(model, word4) == w4_indx
 
 s = similarity(model, word1, word4)
-@test mes[loc] == s
+@test_approx_eq(mes[loc], s)
 
 inx, mes = analogy(model, [word1, word2], [word3], n)
 @test words[inx] == analogy_words(model, [word1, word2], [word3], n)
 
 # word clusters
 model = wordclusters("bigclus.txt")
+println(model)
 rm("bigclus.txt")
 words = vocabulary(model)
 word1 = words[rand(1:end)]
