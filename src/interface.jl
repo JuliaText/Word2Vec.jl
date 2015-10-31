@@ -1,5 +1,5 @@
 """
-`word2vec(train, output; size=100, window=5, sample=0, hs=0,  negative=5, threads=1, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)`
+`word2vec(train, output; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=12, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)`
 
     Parameters for training:
         train <file>
@@ -13,14 +13,14 @@
         sample <AbstractFloat>
             Set threshold for occurrence of words. Those that appear with
             higher frequency in the training data will be randomly
-            down-sampled; default is 0 (off), useful value is 1e-5
+            down-sampled; default is 1e-5.
         hs <Int>
             Use Hierarchical Softmax; default is 1 (0 = not used)
         negative <Int>
             Number of negative examples; default is 0, common values are 
             5 - 10 (0 = not used)
         threads <Int>
-            Use <Int> threads (default 1)
+            Use <Int> threads (default 12)
         iter <Int>
             Run more training iterations (default 5)
         min_count <Int>
@@ -44,8 +44,8 @@
             Print output from training 
 """
 function word2vec(train::AbstractString, output::AbstractString; 
-                  size::Int=100, window::Int=5, sample::AbstractFloat=0.,
-                  hs::Int=0, negative::Int=5, threads::Int=1, iter::Int=5, 
+                  size::Int=100, window::Int=5, sample::AbstractFloat=1e-3,
+                  hs::Int=0, negative::Int=5, threads::Int=12, iter::Int=5, 
                   min_count::Int=5, alpha::AbstractFloat=0.025,
                   debug::Int=2, binary::Int=0, cbow::Int=1, 
                   save_vocab=Void(), read_vocab=Void(), 
@@ -156,20 +156,20 @@ end
 """
 `word2phrase(train, output; min_count=5, threshold=100, debug=2)`
 
-  Parameters for training:
+    Parameters for training:
 	train <file>
-		Use text data from <file> to train the model
+	      Use text data from <file> to train the model 
 	output <file>
-		Use <file> to save the resulting word vectors / word 
-                clusters / phrases
+              Use <file> to save the resulting word vectors / 
+              word clusters / phrases
 	min_count <Int>
-		This will discard words that appear less than <int> times; 
-                default is 5
+              This will discard words that appear less than <int> times; 
+              default is 5
 	threshold <AbstractFloat>
-		 The <AbstractFloat> value represents threshold for forming
-                 the phrases (higher means less phrases); default 100
+      	      The <AbstractFloat> value represents threshold for 
+              forming the phrases (higher means less phrases); default 100
 	debug <Int>
-		Set the debug mode (default = 2 = more info during training)
+	      Set the debug mode (default = 2 = more info during training)
 """
 function word2phrase(train::AbstractString, output::AbstractString;
                      min_count::Int=5, threshold::Int=100, debug::Int=2)
