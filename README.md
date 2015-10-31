@@ -70,7 +70,7 @@ julia> cosine_similar_words(model, "book")
  "genesis"
 ```
 
-Word vectors have other interesting properties, including
+Word vectors have many interesting properties. For example, 
 ``vector("king") - vector("man") + vector("woman")`` is close to
 ``vector("queen")``.
 
@@ -100,3 +100,9 @@ julia> analogy_words(model, ["king", "woman"], ["man"])
   "Linguistic Regularities in Continuous Space Word Representations",
   *In Proceedings of NAACL HLT*, 2013.
   [[pdf]](http://research.microsoft.com/pubs/189726/rvecs.pdf)
+
+## Acknowledgements
+
+The design of the package is inspired by Daniel Rodriguez
+(@danielfrg)'s
+[Python word2vec interface](https://github.com/danielfrg/word2vec).
