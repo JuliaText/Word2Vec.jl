@@ -2,7 +2,7 @@ type WordClusters
     vocab::AbstractArray{AbstractString, 1}
     clusters::AbstractArray{Integer, 1}
     vocab_hash::Dict{AbstractString, Integer}
-    function WordCluster(vocab, clusters)
+    function WordClusters(vocab, clusters)
         vocab_hash = Dict{AbstractString, Integer}()
         for (i, word) in enumerate(vocab)
             vocab_hash[word] = i
@@ -49,7 +49,7 @@ get_cluster(wc::WordClusters, word) = (idx = index(wc, word); wc.clusters[idx])
 
 Return all the clusters from the WordClusters `wc`.
 """
-clusters(wc::WordClusters) = unique(wc.clusters)
+clusters(wc::WordClusters) = sort(unique(wc.clusters))
 
 """
 `get_words(wc, cluster)`
@@ -60,4 +60,23 @@ number `cluster`.
 function get_words(wc::WordClusters, cluster::Int) 
     inds = findin(wc.clusters, cluster)
     return wc.vocab[inds]
+end
+
+"""
+`wordclusters(fname)`
+
+Generate a WordClusters type object from the text file `fname`. 
+"""
+function wordclusters(fname::AbstractString)
+    vocab = AbstractString[]
+    clusters = Integer[]
+    open(fname) do f
+        entries = split(strip(readline(f)), ' ')
+        while length(entries) == 2
+            push!(vocab, entries[1])
+            push!(clusters, parse(Int, entries[2]))
+            entries = split(strip(readline(f)), ' ')
+        end
+    end
+    return WordClusters(vocab, clusters)
 end

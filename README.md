@@ -1,6 +1,7 @@
 # Word2Vec
 
 [![Build Status](https://travis-ci.org/weijianzhang/Word2Vec.jl.svg?branch=master)](https://travis-ci.org/weijianzhang/Word2Vec.jl)
+[![codecov.io](https://codecov.io/github/weijianzhang/Word2Vec.jl/coverage.svg?branch=master)](https://codecov.io/github/weijianzhang/Word2Vec.jl?branch=master)
 
 Julia interface to [word2vec](https://code.google.com/p/word2vec/)
 

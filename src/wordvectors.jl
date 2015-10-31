@@ -136,9 +136,11 @@ end
 
 
 """
-`wordvectors(fname)`
+`wordvectors(fname, kind=:text)`
 
-Generate a WordVectors type object from the file `fname`. 
+Generate a WordVectors type object from the file `fname`.
+The file format can be either text (kind=`:text`) or 
+binary (kind=`:binary`).
 """
 function wordvectors(fname::AbstractString, kind::Symbol=:text)
     if kind == :binary
@@ -152,7 +154,7 @@ end
 
 # generate a WordVectors object from binary file
 function _from_binary(filename::AbstractString) 
-
+    error("binary file reader is currently not implemented.")
 end
 
 # generate a WordVectors object from text file

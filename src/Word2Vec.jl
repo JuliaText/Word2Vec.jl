@@ -4,13 +4,13 @@ import Base: show, size
 
 export
     # types
-    WordVectors,
+    WordVectors, WordClusters,
     
     # functions
     index, get_vector, cosine, vocabulary, in_vocabulary,
     cosine_similar_words, analogy, analogy_words,
     word2vec, wordvectors, similarity, get_cluster, get_words,
-    clusters, word2clusters
+    clusters, word2clusters, wordclusters
 
 include("interface.jl")
 include("wordvectors.jl")
