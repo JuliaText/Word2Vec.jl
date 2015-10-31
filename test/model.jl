@@ -23,6 +23,7 @@ indxs, mes = cosine(model, word1, n)
 w4_indx = indxs[rand(1:end)]
 loc = findin(indxs, w4_indx)
 word4 = words[w4_indx]
+@test index(model, word4) == w4_indx
 
 s = similarity(model, word1, word4)
 @test mes[loc] == s
@@ -35,6 +36,10 @@ model = wordclusters("bigclus.txt")
 rm("bigclus.txt")
 words = vocabulary(model)
 word1 = words[rand(1:end)]
+@test in_vocabulary(model, word1)
+idx = index(model, word1)
+@test words[idx] == word1
+
 clus_num = get_cluster(model, word1)
 clus_words = get_words(model, clus_num)
 @test word1 in clus_words
