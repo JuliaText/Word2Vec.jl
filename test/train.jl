@@ -32,7 +32,5 @@ word2clusters(bigdata, "bigclus.txt", classes, size=vector_size, window=window,
               iter=iter, min_count=min_count, alpha=alpha, debug=debug,
               cbow=cbow, read_vocab=read_vocab)
 
-model = wordclusters("bigclus.txt")
-@test length(clusters(model)) == classes
 
 println("training passed test...")
