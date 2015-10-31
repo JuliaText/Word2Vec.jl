@@ -10,7 +10,7 @@ negative = rand(1:5)
 threads = rand(1:16)
 iter = rand(1:5)
 min_count = rand(1:5)
-alpha = rand()/2
+alpha = 0.025
 debug = 2
 # binary = rand(0:1)  # turn this on when binary file reader is implemented
 cbow = rand(0:1)
@@ -32,6 +32,7 @@ word2clusters(bigdata, "bigclus.txt", classes, size=vector_size, window=window,
               iter=iter, min_count=min_count, alpha=alpha, debug=debug,
               cbow=cbow, read_vocab=read_vocab)
 
-
+model = wordclusters("bigclus.txt")
+@test length(clusters(model)) == classes
 
 println("training passed test...")
