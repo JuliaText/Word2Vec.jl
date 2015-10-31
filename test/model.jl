@@ -18,13 +18,12 @@ n = rand(1:100)
 
 indxs, mes = cosine(model, word1, n)
 @test words[indxs] == cosine_similar_words(model, word1, n)
+w4_indx = indxs[rand(1:end)]
+loc = findin(indxs, w4_indx)
+word4 = words[w4_indx]
 
-s = similarity(model, word1, word2)
-w2_indx = index(model, word2)
-if w2_indx in indxs
-    println("$(word2) has index $(w2_indx)")
-    @test mes[w2_indx] == s
-end
+s = similarity(model, word1, word4)
+@test mes[loc] == s
 
 
 inx, mes = analogy(model, [word1, word2], [word3], n)
