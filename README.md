@@ -12,8 +12,7 @@ functionalities are pure Julia. See [demo](http://nbviewer.ipython.org/github/we
 ## Installation
 
 ```julia
-Pkg.clone(https://github.com/weijianzhang/Word2Vec.jl)
-Pkg.build("Word2Vec")
+Pkg.add("Word2Vec")
 ```
 
 **Note**: Only linux and OS X are supported.
@@ -107,3 +106,8 @@ julia> analogy_words(model, ["king", "woman"], ["man"])
 The design of the package is inspired by Daniel Rodriguez
 (@danielfrg)'s
 [Python word2vec interface](https://github.com/danielfrg/word2vec).
+
+## Reporting Bugs
+
+Please [file an issue](https://github.com/weijianzhang/Word2Vec.jl/issues/new)
+to report a bug or request a feature. 
