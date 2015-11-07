@@ -9,6 +9,8 @@ Word2Vec takes a text corpus as input and produces the word vectors as
 output. Training is done using the original C code, other
 functionalities are pure Julia. See [demo](http://nbviewer.ipython.org/github/weijianzhang/Word2Vec.jl/blob/master/examples/demo.ipynb) for more details.
 
+* [Release Notes](https://github.com/weijianzhang/Word2Vec.jl/blob/master/NEWS.m)
+
 ## Installation
 
 ```julia
