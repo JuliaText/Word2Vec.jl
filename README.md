@@ -109,5 +109,4 @@ The design of the package is inspired by Daniel Rodriguez
 
 ## Reporting Bugs
 
-Please [file an issue](https://github.com/weijianzhang/Word2Vec.jl/issues/new)
-to report a bug or request a feature. 
+Please [file an issue](https://github.com/weijianzhang/Word2Vec.jl/issues/new) to report a bug or request a feature.

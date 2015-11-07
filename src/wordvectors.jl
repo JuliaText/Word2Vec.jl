@@ -148,7 +148,7 @@ binary (kind=`:binary`).
 """
 function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}; kind::Symbol=:text)
     if kind == :binary
-        return _from_binary(T, fname)
+        return _from_binary(fname) # only for Float32
     elseif kind == :text
         return _from_text(T, fname)
     else
@@ -158,19 +158,18 @@ end
 wordvectors(frame::AbstractString; kind::Symbol=:text) = wordvectors(frame, Float64, kind = kind)
 
 # generate a WordVectors object from binary file
-function _from_binary{T}(::Type{T}, filename::AbstractString) 
+function _from_binary(filename::AbstractString) 
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
         vocab = Array(AbstractString, vocab_size)
-        vectors = Array(T, vector_size, vocab_size)
-        binary_length = sizeof(T) * vector_size
+        vectors = Array(Float32, vector_size, vocab_size)
+        binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
-            println(vocab[i])
-            vector = reinterpret(T, readbytes(f, binary_length))
+            vector = reinterpret(Float32, readbytes(f, binary_length))
             vec_norm = norm(vector)
-            vectors[:, i] = vector ./vec_norm  # unit vector
+            vectors[:, i] = vector./vec_norm  # unit vector
             readbytes(f, 1) # new line
         end
         return WordVectors(vocab, vectors) 

@@ -399,7 +399,7 @@ Generate a WordClusters type object from the text file `fname`.
 
 <a id="method__wordvectors.1" class="lexicon_definition"></a>
 #### wordvectors{T<:Real}(fname::AbstractString,  ::Type{T<:Real}) [¶](#method__wordvectors.1)
-`wordvectors(fname [,type=Float64][, kind=:text])`
+`wordvectors(fname [,type=Float64][; kind=:text])`
 
 Generate a WordVectors type object from the file `fname`, where
 `type` is the element of the vectors.

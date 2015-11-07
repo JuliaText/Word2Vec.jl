@@ -6,9 +6,15 @@ println(model)
 rm("bigvecs.txt")
 rm("vocab.txt")
 
+modelbin = wordvectors("bigvecs.bin", kind = :binary)
+rm("bigvecs.bin")
+
 len_vecs, num_words = size(model)
 wordvecs = model.vectors
+
+len_vecs_bin, num_words_bin = size(modelbin)
 @test size(wordvecs) == (len_vecs, num_words)
+@test len_vecs == len_vecs_bin
 
 words = vocabulary(model)
 word1 = words[rand(1:end)]
