@@ -139,14 +139,14 @@ end
 
 
 """
-`wordvectors(fname [,type=Float64][, kind=:text])`
+`wordvectors(fname [,type=Float64][; kind=:text])`
 
 Generate a WordVectors type object from the file `fname`, where
 `type` is the element of the vectors.
 The file format can be either text (kind=`:text`) or 
 binary (kind=`:binary`).
 """
-function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}, kind::Symbol=:text)
+function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}; kind::Symbol=:text)
     if kind == :binary
         return _from_binary(T, fname)
     elseif kind == :text
@@ -155,11 +155,26 @@ function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}, kind::Symbol=:te
         error("Unknown kind $(kind)")
     end
 end
-wordvectors(frame::AbstractString, kind::Symbol=:text) = wordvectors(frame, Float64, kind)
+wordvectors(frame::AbstractString; kind::Symbol=:text) = wordvectors(frame, Float64, kind = kind)
 
 # generate a WordVectors object from binary file
-function _from_binary(filename::AbstractString) 
-    error("binary file reader is currently not implemented.")
+function _from_binary{T}(::Type{T}, filename::AbstractString) 
+    open(filename) do f
+        header = strip(readline(f))
+        vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
+        vocab = Array(AbstractString, vocab_size)
+        vectors = Array(T, vector_size, vocab_size)
+        binary_length = sizeof(T) * vector_size
+        for i in 1:vocab_size
+            vocab[i] = strip(readuntil(f, ' '))
+            println(vocab[i])
+            vector = reinterpret(T, readbytes(f, binary_length))
+            vec_norm = norm(vector)
+            vectors[:, i] = vector ./vec_norm  # unit vector
+            readbytes(f, 1) # new line
+        end
+        return WordVectors(vocab, vectors) 
+    end
 end
 
 # generate a WordVectors object from text file
