@@ -39,7 +39,7 @@ len_vecs, num_words = size(model)
 word2clusters(bigdata, "bigclus.txt", classes, size=vector_size, window=window,
               sample=sample, hs=hs, negative=negative, threads=threads,
               iter=iter, min_count=min_count, alpha=alpha, debug=debug,
-              cbow=cbow, read_vocab=read_vocab)
+              cbow=cbow, read_vocab=read_vocab, save_vocab=save_vocab)
 
 
 println("training passed test...")

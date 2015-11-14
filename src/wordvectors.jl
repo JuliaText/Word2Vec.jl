@@ -152,7 +152,7 @@ function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}; kind::Symbol=:te
     elseif kind == :text
         return _from_text(T, fname)
     else
-        error("Unknown kind $(kind)")
+        throw(ArgumentError("Unknown kind $(kind)"))
     end
 end
 wordvectors(frame::AbstractString; kind::Symbol=:text) = wordvectors(frame, Float64, kind = kind)
