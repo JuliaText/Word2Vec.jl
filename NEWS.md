@@ -1,5 +1,10 @@
 ## Word2Vec Release Notes
 
+v0.0.3
+------
+
+Add more tests
+
 v0.0.2
 ------
 
