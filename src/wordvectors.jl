@@ -20,36 +20,37 @@ function show{S,T}(io::IO, wv::WordVectors{S,T})
 end
 
 """
-`vocabulary(wv)` 
+    vocabulary(wv)
 
-Return all the vocabulary of the WordVectors `wv`.
+Return the vocabulary as a vector of words of the WordVectors `wv`.
 """
 vocabulary(wv::WordVectors) = wv.vocab
 
 """
-`in_vocabulary(wv, word)`
+    in_vocabulary(wv, word)
 
-Return `true` if `word` is part of the vocabulary of `wv` and `false` otherwise.
+Return `true` if `word` is part of the vocabulary of the WordVector `wv` and 
+`false` otherwise.
 """
 in_vocabulary(wv::WordVectors, word::AbstractString) = word in wv.vocab
 
 """
-`size(wv)`
+    size(wv)
 
-Return the size of the WordVectors `wv`. 
+Return the word vector length and the number of words as a tuple.  
 """
 size(wv::WordVectors) = size(wv.vectors)
 
 
 """
-`index(wv, word)`
+    index(wv, word)
 
 Return the index of `word` from the WordVectors `wv`.
 """
 index(wv::WordVectors, word) = wv.vocab_hash[word]
 
 """
-`get_vector(wv, word)`
+    get_vector(wv, word)
 
 Return the vector representation of `word` from the WordVectors `wv`. 
 """
@@ -57,9 +58,10 @@ get_vector(wv::WordVectors, word) =
       (idx = wv.vocab_hash[word]; wv.vectors[:,idx])
 
 """
-`cosine(wv, word, n=10)`
+    cosine(wv, word, n=10)
 
-Return the position of `n` neighbors of `word` and cosine similarity 
+Return the position of `n` (by default `n = 10`) neighbors of `word` and their 
+cosine similarities.
 """
 function cosine(wv::WordVectors, word, n=10)
     metrics = wv.vectors'*get_vector(wv, word)
@@ -70,7 +72,7 @@ end
 
 
 """
-`similarity(wv, word1, word2)`
+    similarity(wv, word1, word2)
 
 Return the cosine similarity value between two words `word1` and `word2`.
 """
@@ -80,9 +82,10 @@ end
 
 
 """
-`cosine_similar_words(wv, word, n=10)`
+    cosine_similar_words(wv, word, n=10)
 
-Return the top `n` most similar words to `word` from the WordVectors `wv`.
+Return the top `n` (by default `n = 10`) most similar words to `word`
+from the WordVectors `wv`.
 """
 function cosine_similar_words(wv::WordVectors, word, n=10)
     indx, metr = cosine(wv, word, n)
@@ -91,7 +94,7 @@ end
 
 
 """
-`analogy(wv, pos, neg, n=5)`
+    analogy(wv, pos, neg, n=5)
 
 Compute the analogy similarity between two lists of words. The positions
 and the similarity values of the top `n` similar words will be returned. 
@@ -127,7 +130,7 @@ function analogy(wv::WordVectors, pos::AbstractArray, neg::AbstractArray, n= 5)
 end
 
 """
-`analogy_words(wv, pos, neg, n=5)`
+    analogy_words(wv, pos, neg, n=5)
 
 Return the top `n` words computed by analogy similarity between
 positive words `pos` and negaive words `neg`. from the WordVectors `wv`. 
@@ -139,7 +142,7 @@ end
 
 
 """
-`wordvectors(fname [,type=Float64][; kind=:text])`
+    wordvectors(fname [,type=Float64][; kind=:text])
 
 Generate a WordVectors type object from the file `fname`, where
 `type` is the element of the vectors.

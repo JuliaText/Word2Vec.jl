@@ -1,5 +1,5 @@
 """
-`word2vec(train, output; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=12, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)`
+     word2vec(train, output; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=12, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)
 
     Parameters for training:
         train <file>
@@ -76,7 +76,7 @@ end
 
 
 """
-`word2cluster(train, output, classes; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=1, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)`
+     word2cluster(train, output, classes; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=1, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)
 
     Parameters for training:
         train <file>
@@ -154,7 +154,7 @@ function word2clusters(train::AbstractString, output::AbstractString,
 end
 
 """
-`word2phrase(train, output; min_count=5, threshold=100, debug=2)`
+     word2phrase(train, output; min_count=5, threshold=100, debug=2)
 
     Parameters for training:
 	train <file>
