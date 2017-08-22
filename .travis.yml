@@ -3,13 +3,13 @@ os:
   - linux
   - osx
 julia:
-  - 0.4
+  - 0.6
   - nightly
 notifications:
   email: false
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("Word2Vec")' 
+  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("Word2Vec")'
   - julia -e 'Pkg.test("Word2Vec"; coverage=true)'
 after_success:
   - julia -e 'cd(Pkg.dir("Word2Vec")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'

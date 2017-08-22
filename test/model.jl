@@ -1,8 +1,8 @@
-# test various model functions 
+# test various model functions
 
 # word vectors
 model = wordvectors("bigvecs.txt", Float32)
-println(model) 
+println(model)
 rm("bigvecs.txt")
 rm("vocab.txt")
 
@@ -14,7 +14,7 @@ try
 catch ArgumentError
     println("unknown kind value")
 end
-    
+
 
 len_vecs, num_words = size(model)
 wordvecs = model.vectors
@@ -40,7 +40,7 @@ word4 = words[w4_indx]
 @test index(model, word4) == w4_indx
 
 s = similarity(model, word1, word4)
-@test_approx_eq(mes[loc], s)
+@test mes[loc][1] ≈ s
 
 inx, mes = analogy(model, [word1, word2], [word3], n)
 @test words[inx] == analogy_words(model, [word1, word2], [word3], n)
@@ -64,4 +64,3 @@ clu = clus[rand(1:end)]
 get_words(model, clu)
 
 println("model passed test...")
-

@@ -2,3 +2,5 @@
 *.jl.mem
 
 deps/
+test/bigclus.txt
+test/bigvecs.bin
