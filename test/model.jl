@@ -9,12 +9,7 @@ rm("vocab.txt")
 modelbin = wordvectors("bigvecs.bin", kind = :binary)
 rm("bigvecs.bin")
 
-try
-    wordvectors("bigvecs.txt", kind = :unkown)
-catch ArgumentError
-    println("unknown kind value")
-end
-
+@test_throws ArgumentError wordvectors("bigvecs.txt", kind = :unkown)
 
 len_vecs, num_words = size(model)
 wordvecs = model.vectors

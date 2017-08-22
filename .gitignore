@@ -4,3 +4,5 @@
 deps/
 test/bigclus.txt
 test/bigvecs.bin
+test/bigvecs.txt
+test/vocab.txt

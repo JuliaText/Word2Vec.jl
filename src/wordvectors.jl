@@ -1,9 +1,10 @@
-type WordVectors{S<:AbstractString, T<:Real, H<:Integer}
+mutable struct WordVectors{S<:AbstractString, T<:Real, H<:Integer}
     vocab::AbstractArray{S, 1} # vocabulary
     vectors::AbstractArray{T, 2} # the vectors computed from word2vec
     vocab_hash::Dict{S, H}
 end
-function WordVectors{S, T}(vocab::AbstractArray{S,1},
+
+function WordVectors{S <: AbstractString, T <: Real}(vocab::AbstractArray{S,1},
                            vectors::AbstractArray{T,2})
     length(vocab) == size(vectors, 2) ||
         throw(DimensionMismatch("Dimension of vocab and vectors are inconsistent."))
@@ -14,10 +15,13 @@ function WordVectors{S, T}(vocab::AbstractArray{S,1},
     WordVectors(vocab, vectors, vocab_hash)
 end
 
-function show{S,T}(io::IO, wv::WordVectors{S,T})
+#Should be called hide not show :-).
+
+function Base.show(io::IO, wv::WordVectors)
     len_vecs, num_words = size(wv.vectors)
-    print(io, "WordVectors $(num_words) words, $(len_vecs)-element $(T) vectors")
+    print(io, "WordVectors $(num_words) words, $(len_vecs)-element vectors")
 end
+
 
 """
     vocabulary(wv)
@@ -149,7 +153,7 @@ Generate a WordVectors type object from the file `fname`, where
 The file format can be either text (kind=`:text`) or
 binary (kind=`:binary`).
 """
-function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}; kind::Symbol=:text)
+function wordvectors{T <: Real}(fname::AbstractString, ::Type{T}; kind::Symbol=:text)
     if kind == :binary
         return _from_binary(fname) # only for Float32
     elseif kind == :text
@@ -158,7 +162,8 @@ function wordvectors{T<:Real}(fname::AbstractString, ::Type{T}; kind::Symbol=:te
         throw(ArgumentError("Unknown kind $(kind)"))
     end
 end
-wordvectors(frame::AbstractString; kind::Symbol=:text) = wordvectors(frame, Float64, kind = kind)
+wordvectors(frame::AbstractString; kind::Symbol=:text) =
+    wordvectors(frame, Float64, kind=kind)
 
 # generate a WordVectors object from binary file
 function _from_binary(filename::AbstractString)
