@@ -175,10 +175,10 @@ function _from_binary(filename::AbstractString)
         binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
-            vector = reinterpret(Float32, read(f, binary_length))
+            vector = read(f, Float32, vector_size)
             vec_norm = norm(vector)
             vectors[:, i] = vector./vec_norm  # unit vector
-            read(f, 1) # new line
+            read(f, UInt8) # new line
         end
         return WordVectors(vocab, vectors)
     end
