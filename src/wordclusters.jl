@@ -1,4 +1,4 @@
-type WordClusters
+mutable struct WordClusters
     vocab::AbstractArray{AbstractString, 1}
     clusters::AbstractArray{Integer, 1}
     vocab_hash::Dict{AbstractString, Integer}
@@ -25,7 +25,7 @@ vocabulary(wc::WordClusters) = wc.vocab
 """
     in_vocabulary(wc, word)
 
-For the WordCluters `wc`, return `true` if `word` is part of the 
+For the WordCluters `wc`, return `true` if `word` is part of the
 vocabulary of `wc` and `false` otherwise.
 """
 in_vocabulary(wc::WordClusters, word::AbstractString) = word in wc.vocab
@@ -57,7 +57,7 @@ clusters(wc::WordClusters) = sort(unique(wc.clusters))
 For the WordCluster `wc`, return all the words from a given cluster
 number `cluster`.
 """
-function get_words(wc::WordClusters, cluster::Int) 
+function get_words(wc::WordClusters, cluster::Int)
     inds = findin(wc.clusters, cluster)
     return wc.vocab[inds]
 end
@@ -65,7 +65,7 @@ end
 """
     wordclusters(fname)
 
-Generate a WordClusters type object from the text file `fname`. 
+Generate a WordClusters type object from the text file `fname`.
 """
 function wordclusters(fname::AbstractString)
     vocab = AbstractString[]
