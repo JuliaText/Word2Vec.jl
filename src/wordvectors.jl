@@ -155,7 +155,20 @@ binary (kind=`:binary`).
 """
 function wordvectors(fname::AbstractString, ::Type{T}; kind::Symbol=:text) where T <: Real
     if kind == :binary
-        return _from_binary(fname) # only for Float32
+        try
+            return _from_binary(fname) # only for Float32
+        catch y
+            if isa(y, UnicodeError)
+                info("UnicodeError detected. This could mean you try to load a pre-trained " *
+                     "file from Google. Trying to load as a Google binary. You can force " *
+                     "this with kind=:google")
+                return _from_google_binary(fname)
+            else # Otherwise pass the exception along
+                throw(y)
+            end
+        end
+    elseif kind == :google
+        return _from_google_binary(fname)
     elseif kind == :text
         return _from_text(T, fname)
     else
@@ -180,6 +193,25 @@ function _from_binary(filename::AbstractString)
             vec_norm = norm(vector)
             vectors[:, i] = vector./vec_norm  # unit vector
             read(f, UInt8) # new line
+        end
+        return WordVectors(vocab, vectors)
+    end
+end
+
+# generate a WordVectors object from binary file in the format used by
+# the original pre-trained files by google
+function _from_google_binary(filename::AbstractString)
+    open(filename) do f
+        header = strip(readline(f))
+        vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
+        vocab = Vector{AbstractString}(vocab_size)
+        vectors = Array{Float32}(vector_size, vocab_size)
+        binary_length = sizeof(Float32) * vector_size
+        for i in 1:vocab_size
+            vocab[i] = strip(readuntil(f, ' '))
+            vector = read(f, Float32, vector_size)
+            vec_norm = norm(vector)
+            vectors[:, i] = vector./vec_norm  # unit vector
         end
         return WordVectors(vocab, vectors)
     end
