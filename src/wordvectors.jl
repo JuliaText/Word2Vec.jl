@@ -5,7 +5,7 @@ mutable struct WordVectors{S<:AbstractString, T<:Real, H<:Integer}
 end
 
 function WordVectors(vocab::AbstractArray{S,1},
-                    vectors::AbstractArray{T,2}) where {S <: AbstractString, T <: Real}
+                     vectors::AbstractArray{T,2}) where {S <: AbstractString, T <: Real}
     length(vocab) == size(vectors, 2) ||
         throw(DimensionMismatch("Dimension of vocab and vectors are inconsistent."))
     vocab_hash = Dict{S, Int}()
@@ -59,7 +59,7 @@ index(wv::WordVectors, word) = wv.vocab_hash[word]
 Return the vector representation of `word` from the WordVectors `wv`.
 """
 get_vector(wv::WordVectors, word) =
-      (idx = wv.vocab_hash[word]; wv.vectors[:,idx])
+    (idx = wv.vocab_hash[word]; wv.vectors[:,idx])
 
 """
     cosine(wv, word, n=10)
@@ -152,35 +152,39 @@ Generate a WordVectors type object from the file `fname`, where
 `type` is the element of the vectors.
 The file format can be either text (kind=`:text`) or
 binary (kind=`:binary`).
+
+If `normalize=false` the embedding vectors will not be normalized. 
+The default is true.
 """
-function wordvectors(fname::AbstractString, ::Type{T}; kind::Symbol=:text) where T <: Real
+function wordvectors(fname::AbstractString, ::Type{T}; kind::Symbol=:text,
+                     normalize::Bool=true) where T <: Real
     if kind == :binary
         try
-            return _from_binary(fname) # only for Float32
+            return _from_binary(fname, normalize=normalize) # only for Float32
         catch y
             if isa(y, UnicodeError)
                 info("UnicodeError detected. This could mean you try to load a pre-trained " *
                      "file from Google. Trying to load as a Google binary. You can force " *
                      "this with kind=:google")
-                return _from_google_binary(fname)
+                return _from_google_binary(fname, normalize=normalize)
             else # Otherwise pass the exception along
                 throw(y)
             end
         end
     elseif kind == :google
-        return _from_google_binary(fname)
+        return _from_google_binary(fname, normalize=normalize)
     elseif kind == :text
-        return _from_text(T, fname)
+        return _from_text(T, fname, normalize=normalize)
     else
         throw(ArgumentError("Unknown kind $(kind)"))
     end
 end
 
-wordvectors(frame::AbstractString; kind::Symbol=:text) =
-    wordvectors(frame, Float64,kind=kind)
+wordvectors(frame::AbstractString; kind::Symbol=:text, normalize::Bool=true) =
+    wordvectors(frame, Float64,kind=kind, normalize=normalize)
 
 # generate a WordVectors object from binary file
-function _from_binary(filename::AbstractString)
+function _from_binary(filename::AbstractString; normalize::Bool=true)
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
@@ -190,8 +194,8 @@ function _from_binary(filename::AbstractString)
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
             vector = read(f, Float32, vector_size)
-            vec_norm = norm(vector)
-            vectors[:, i] = vector./vec_norm  # unit vector
+            normalize && (vector = vector ./ norm(vector)) # Normalize if needed
+            vectors[:, i] = vector
             read(f, UInt8) # new line
         end
         return WordVectors(vocab, vectors)
@@ -200,7 +204,7 @@ end
 
 # generate a WordVectors object from binary file in the format used by
 # the original pre-trained files by google
-function _from_google_binary(filename::AbstractString)
+function _from_google_binary(filename::AbstractString; normalize::Bool=true)
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
@@ -210,15 +214,15 @@ function _from_google_binary(filename::AbstractString)
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
             vector = read(f, Float32, vector_size)
-            vec_norm = norm(vector)
-            vectors[:, i] = vector./vec_norm  # unit vector
+            normalize && (vector = vector ./ norm(vector)) # Normalize if needed
+            vectors[:, i] = vector
         end
         return WordVectors(vocab, vectors)
     end
 end
 
 # generate a WordVectors object from text file
-function _from_text(::Type{T}, filename::AbstractString) where T
+function _from_text(::Type{T}, filename::AbstractString; normalize::Bool=true) where T
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
@@ -230,10 +234,10 @@ function _from_text(::Type{T}, filename::AbstractString) where T
             parts = split(line, ' ')
             word = parts[1]
             vector = map(x-> parse(T, x), parts[2:end])
-            vec_norm = norm(vector)
+            normalize && (vector = vector ./ norm(vector)) # Normalize if needed            
+            vectors[:, i] = vector
             vocab[i] = word
-            vectors[:, i] = vector./vec_norm  #unit vector
         end
-       return WordVectors(vocab, vectors)
+        return WordVectors(vocab, vectors)
     end
 end
