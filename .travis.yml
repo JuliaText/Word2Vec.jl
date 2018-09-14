@@ -9,7 +9,7 @@ notifications:
   email: false
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia --check-bounds=yes -e 'Pkg.clone(pwd()); Pkg.build("Word2Vec")'
-  - julia -e 'Pkg.test("Word2Vec"; coverage=true)'
+  - julia --check-bounds=yes -e '(VERSION >= v"0.7" && using Pkg); Pkg.clone(pwd()); Pkg.build("Word2Vec")'
+  - julia -e '(VERSION >= v"0.7" && using Pkg); Pkg.test("Word2Vec"; coverage=true)'
 after_success:
-  - julia -e 'cd(Pkg.dir("Word2Vec")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  - julia -e '(VERSION >= v"0.7" && using Pkg); cd(Pkg.dir("Word2Vec")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
