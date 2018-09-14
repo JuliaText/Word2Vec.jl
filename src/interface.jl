@@ -101,19 +101,19 @@ end
         iter <Int>
             Run more training iterations (default 5)
         min_count <Int>
-            This will discard words that appear less than <Int> times; default
-            is 5
+            This will discard words that appear less than <Int> times
+            (default 5)
         alpha <AbstractFloat>
             Set the starting learning rate; default is 0.025
         classes <Int>
-            Output word classes rather than word vectors; default number of 
-            classes is 0.    
+            Number of word classes; if 0, output word classes rather than
+            word vectors (default 0)
         debug <Int>
             Set the debug mode (default = 2 = more info during training)
         binary <Int>
             Save the resulting vectors in binary moded; default is 0 (off)
         cbow <Int>
-            Use the continuous back of words model; default is 1 (skip-gram
+            Use the continuous back of words model; default is 1 (0 for skip-gram
             model)
         save_vocab <file>
             The vocabulary will be saved to <file>

@@ -1,9 +1,9 @@
 mutable struct WordClusters
-    vocab::AbstractArray{AbstractString, 1}
-    clusters::AbstractArray{Integer, 1}
-    vocab_hash::Dict{AbstractString, Integer}
+    vocab::Vector{String}
+    clusters::Vector{Int}
+    vocab_hash::Dict{String, Int}
     function WordClusters(vocab, clusters)
-        vocab_hash = Dict{AbstractString, Integer}()
+        vocab_hash = Dict{String, Int}()
         for (i, word) in enumerate(vocab)
             vocab_hash[word] = i
         end
@@ -68,7 +68,7 @@ end
 Generate a WordClusters type object from the text file `fname`.
 """
 function wordclusters(fname::AbstractString)
-    vocab = AbstractString[]
+    vocab = String[]
     clusters = Int[]
     open(fname) do f
         entries = split(strip(readline(f)), ' ')

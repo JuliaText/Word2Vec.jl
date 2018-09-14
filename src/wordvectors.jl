@@ -1,6 +1,6 @@
 mutable struct WordVectors{S<:AbstractString, T<:Real, H<:Integer}
-    vocab::AbstractArray{S, 1} # vocabulary
-    vectors::AbstractArray{T, 2} # the vectors computed from word2vec
+    vocab::Vector{S} # vocabulary
+    vectors::Array{T, 2} # the vectors computed from word2vec
     vocab_hash::Dict{S, H}
 end
 
@@ -17,9 +17,9 @@ end
 
 #Should be called hide not show :-).
 
-function Base.show(io::IO, wv::WordVectors)
+function Base.show(io::IO, wv::WordVectors{S,T}) where {S,T}
     len_vecs, num_words = size(wv.vectors)
-    print(io, "WordVectors $(num_words) words, $(len_vecs)-element vectors")
+    print(io, "WordVectors $(num_words) words, $(len_vecs)-element $(T)vectors")
 end
 
 
@@ -146,16 +146,19 @@ end
 
 
 """
-    wordvectors(fname [,type=Float64][; kind=:text])
+    wordvectors(fname [,type=Float64][; kind=:text, skip::Bool=false])
 
 Generate a WordVectors type object from the file `fname`, where
 `type` is the element of the vectors.
 The file format can be either text (kind=`:text`) or
-binary (kind=`:binary`).
+binary (kind=`:binary`). Use skip=`true` for models where the
+newline byte is missing (i.e. Google pre-trained models)
 """
-function wordvectors(fname::AbstractString, ::Type{T}; kind::Symbol=:text) where T <: Real
+function wordvectors(fname::AbstractString, ::Type{T};
+                     kind::Symbol=:text,
+                     skip::Bool=false) where T <: Real
     if kind == :binary
-        return _from_binary(fname) # only for Float32
+        return _from_binary(T, fname, skip)
     elseif kind == :text
         return _from_text(T, fname)
     else
@@ -163,30 +166,31 @@ function wordvectors(fname::AbstractString, ::Type{T}; kind::Symbol=:text) where
     end
 end
 
-wordvectors(frame::AbstractString; kind::Symbol=:text) =
-    wordvectors(frame, Float64,kind=kind)
+wordvectors(frame::AbstractString; kind::Symbol=:text, skip::Bool=false) =
+    wordvectors(frame, Float64, kind=kind)
 
 # generate a WordVectors object from binary file
-function _from_binary(filename::AbstractString)
+function _from_binary(::Type{T}, filename::AbstractString, skip::Bool=true) where T<:Real
+    sb = ifelse(skip, 0, 1)
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
         vocab = Vector{AbstractString}(vocab_size)
-        vectors = Array{Float32}(vector_size, vocab_size)
+        vectors = zeros(T, vector_size, vocab_size)
         binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
-            vector = read(f, Float32, vector_size)
+            vector = reinterpret(Float32, read(f, binary_length))
             vec_norm = norm(vector)
-            vectors[:, i] = vector./vec_norm  # unit vector
-            read(f, UInt8) # new line
+            vectors[:, i] = T.(vector./vec_norm)  # unit vector
+            read(f, sb) # new line
         end
         return WordVectors(vocab, vectors)
     end
 end
 
 # generate a WordVectors object from text file
-function _from_text(::Type{T}, filename::AbstractString) where T
+function _from_text(::Type{T}, filename::AbstractString) where T<:Real
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))

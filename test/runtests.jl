@@ -1,6 +1,9 @@
 using Word2Vec
-using Base.Test
-
+if VERSION <v"0.7"
+    using Base.Test
+else
+    using Test
+end
 include("train.jl") 
 include("model.jl")
 #include("load.jl")
