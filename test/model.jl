@@ -30,7 +30,7 @@ n = rand(1:100)
 indxs, mes = cosine(model, word1, n)
 @test words[indxs] == cosine_similar_words(model, word1, n)
 w4_indx = indxs[rand(1:end)]
-loc = findin(indxs, w4_indx)
+@compat loc = findall(in(w4_indx), indxs)
 word4 = words[w4_indx]
 @test index(model, word4) == w4_indx
 

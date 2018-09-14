@@ -19,7 +19,7 @@ end
 
 function Base.show(io::IO, wv::WordVectors{S,T}) where {S,T}
     len_vecs, num_words = size(wv.vectors)
-    print(io, "WordVectors $(num_words) words, $(len_vecs)-element $(T)vectors")
+    print(io, "WordVectors $(num_words) words, $(len_vecs)-element $(T) vectors")
 end
 
 
@@ -110,7 +110,7 @@ function analogy(wv::WordVectors, pos::AbstractArray, neg::AbstractArray, n= 5)
     m, n_vocab = size(wv)
     n_pos = length(pos)
     n_neg = length(neg)
-    anal_vecs = Array{AbstractFloat}(m, n_pos + n_neg)
+    @compat anal_vecs = Array{AbstractFloat}(undef, m, n_pos + n_neg)
 
     for (i, word) in enumerate(pos)
         anal_vecs[:,i] = get_vector(wv, word)
@@ -118,13 +118,13 @@ function analogy(wv::WordVectors, pos::AbstractArray, neg::AbstractArray, n= 5)
     for (i, word) in enumerate(neg)
         anal_vecs[:,i+n_pos] = -get_vector(wv, word)
     end
-    mean_vec = mean(anal_vecs, 2)
+    mean_vec = Compat.Statistics.mean(anal_vecs, dims=2)
     metrics = wv.vectors'*mean_vec
     top_positions = sortperm(metrics[:], rev = true)[1:n+n_pos+n_neg]
     for word in [pos;neg]
         idx = index(wv, word)
-        loc = findfirst(top_positions, idx)
-        if loc != 0
+        @compat loc = findfirst(x->x==idx, top_positions)
+        if loc != 0 && loc isa Int
             splice!(top_positions, loc)
         end
     end
@@ -175,13 +175,13 @@ function _from_binary(::Type{T}, filename::AbstractString, skip::Bool=true) wher
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
-        vocab = Vector{AbstractString}(vocab_size)
+        @compat vocab = Vector{AbstractString}(undef, vocab_size)
         vectors = zeros(T, vector_size, vocab_size)
         binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
             vector = reinterpret(Float32, read(f, binary_length))
-            vec_norm = norm(vector)
+            vec_norm = Compat.norm(vector)
             vectors[:, i] = T.(vector./vec_norm)  # unit vector
             read(f, sb) # new line
         end
@@ -194,15 +194,15 @@ function _from_text(::Type{T}, filename::AbstractString) where T<:Real
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
-        vocab = Vector{AbstractString}(vocab_size)
-        vectors = Array{T}(vector_size, vocab_size)
+        @compat vocab = Vector{AbstractString}(undef, vocab_size)
+        @compat vectors = Array{T}(undef, vector_size, vocab_size)
         @inbounds for (i, line) in enumerate(readlines(f))
             #println(line)
             line = strip(line)
             parts = split(line, ' ')
             word = parts[1]
             vector = map(x-> parse(T, x), parts[2:end])
-            vec_norm = norm(vector)
+            vec_norm = Compat.norm(vector)
             vocab[i] = word
             vectors[:, i] = vector./vec_norm  #unit vector
         end

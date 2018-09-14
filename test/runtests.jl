@@ -1,4 +1,6 @@
+using Compat
 using Word2Vec
+
 if VERSION <v"0.7"
     using Base.Test
 else

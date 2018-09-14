@@ -1,6 +1,12 @@
 module Word2Vec
 
+if VERSION >= v"0.7"
+    Void = Nothing  # Should be removed once Julia v0.6 support is dropped
+end
+
 import Base: show, size
+import Compat.Statistics
+using Compat
 
 export
     # types
