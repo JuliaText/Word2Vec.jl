@@ -1,6 +1,7 @@
 module Word2Vec
 
 import Base: show, size
+import Statistics: norm, mean
 
 export
     # types

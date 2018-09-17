@@ -110,7 +110,7 @@ function analogy(wv::WordVectors, pos::AbstractArray, neg::AbstractArray, n= 5)
     m, n_vocab = size(wv)
     n_pos = length(pos)
     n_neg = length(neg)
-    anal_vecs = Array{AbstractFloat}(m, n_pos + n_neg)
+    anal_vecs = Array{AbstractFloat}(undef, m, n_pos + n_neg)
 
     for (i, word) in enumerate(pos)
         anal_vecs[:,i] = get_vector(wv, word)
@@ -118,13 +118,13 @@ function analogy(wv::WordVectors, pos::AbstractArray, neg::AbstractArray, n= 5)
     for (i, word) in enumerate(neg)
         anal_vecs[:,i+n_pos] = -get_vector(wv, word)
     end
-    mean_vec = mean(anal_vecs, 2)
+    mean_vec = mean(anal_vecs, dims=2)
     metrics = wv.vectors'*mean_vec
     top_positions = sortperm(metrics[:], rev = true)[1:n+n_pos+n_neg]
     for word in [pos;neg]
         idx = index(wv, word)
-        loc = findfirst(top_positions, idx)
-        if loc != 0
+        loc = findfirst(isequal(idx), top_positions)
+        if loc != nothing
             splice!(top_positions, loc)
         end
     end
@@ -188,12 +188,13 @@ function _from_binary(filename::AbstractString; normalize::Bool=true)
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
-        vocab = Vector{AbstractString}(vocab_size)
-        vectors = Array{Float32}(vector_size, vocab_size)
+        vocab = Vector{AbstractString}(undef, vocab_size)
+        vectors = Array{Float32}(undef, vector_size, vocab_size)
         binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
-            vector = read(f, Float32, vector_size)
+            vector = Vector{Float32}(undef, vector_size)
+            read!(f, vector)
             normalize && (vector = vector ./ norm(vector)) # Normalize if needed
             vectors[:, i] = vector
             read(f, UInt8) # new line
@@ -208,12 +209,13 @@ function _from_google_binary(filename::AbstractString; normalize::Bool=true)
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
-        vocab = Vector{AbstractString}(vocab_size)
-        vectors = Array{Float32}(vector_size, vocab_size)
+        vocab = Vector{AbstractString}(undef, vocab_size)
+        vectors = Array{Float32}(undef, vector_size, vocab_size)
         binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
             vocab[i] = strip(readuntil(f, ' '))
-            vector = read(f, Float32, vector_size)
+            vector = Vector{Float32}(undef, vector_size)
+            read!(f, vector)
             normalize && (vector = vector ./ norm(vector)) # Normalize if needed
             vectors[:, i] = vector
         end
@@ -226,8 +228,8 @@ function _from_text(::Type{T}, filename::AbstractString; normalize::Bool=true) w
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
-        vocab = Vector{AbstractString}(vocab_size)
-        vectors = Array{T}(vector_size, vocab_size)
+        vocab = Vector{AbstractString}(undef, vocab_size)
+        vectors = Array{T}(undef, vector_size, vocab_size)
         @inbounds for (i, line) in enumerate(readlines(f))
             #println(line)
             line = strip(line)

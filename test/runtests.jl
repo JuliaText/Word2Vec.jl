@@ -1,5 +1,5 @@
 using Word2Vec
-using Base.Test
+using Test
 
 include("train.jl") 
 include("model.jl")
