@@ -1,7 +1,11 @@
 # Word2Vec
 
-[![Build Status](https://travis-ci.org/weijianzhang/Word2Vec.jl.svg?branch=master)](https://travis-ci.org/weijianzhang/Word2Vec.jl)
-[![codecov.io](https://codecov.io/github/weijianzhang/Word2Vec.jl/coverage.svg?branch=master)](https://codecov.io/github/weijianzhang/Word2Vec.jl?branch=master)
+[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+
+_'latest' branch_:
+[![Build Status](https://travis-ci.org/zgornel/Word2Vec.jl.svg?branch=latest)](https://travis-ci.org/zgornel/Word2Vec.jl)
+[![Coverage Status](https://coveralls.io/repos/github/zgornel/Word2Vec.jl/badge.svg?branch=latest)](https://coveralls.io/github/zgornel/Word2Vec.jl?branch=master)
+
 
 Julia interface to [word2vec](https://code.google.com/p/word2vec/)
 
