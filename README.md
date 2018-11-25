@@ -1,8 +1,6 @@
 # Word2Vec
 
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
-
-_'latest' branch_:
 [![Build Status](https://travis-ci.org/zgornel/Word2Vec.jl.svg?branch=latest)](https://travis-ci.org/zgornel/Word2Vec.jl)
 [![Coverage Status](https://coveralls.io/repos/github/zgornel/Word2Vec.jl/badge.svg?branch=latest)](https://coveralls.io/github/zgornel/Word2Vec.jl?branch=master)
 
