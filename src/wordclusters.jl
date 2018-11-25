@@ -58,7 +58,7 @@ For the WordCluster `wc`, return all the words from a given cluster
 number `cluster`.
 """
 function get_words(wc::WordClusters, cluster::Int)
-    @compat inds = findall(in(cluster), wc.clusters)
+    inds = findall(in(cluster), wc.clusters)
     return wc.vocab[inds]
 end
 

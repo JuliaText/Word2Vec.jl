@@ -1,12 +1,11 @@
-using Compat
 using Word2Vec
 
-if VERSION <v"0.7"
-    using Base.Test
-else
-    using Test
+using Test
+
+@testset "Model training" begin
+    include("train.jl")
 end
-include("train.jl") 
-include("model.jl")
-#include("load.jl")
-println(":)")
+
+@testset "Model API" begin
+    include("model.jl")
+end
