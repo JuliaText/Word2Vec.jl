@@ -3,16 +3,15 @@ os:
   - linux
   - osx
 julia:
-  - 0.7
+  - 1.0
   - nightly
+notifications:
+  email: false
+git:
+  depth: 99999999
 matrix:
   allow_failures:
   - julia: nightly
-notifications:
-  email: false
-script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia --check-bounds=yes -e '(VERSION >= v"0.7" && using Pkg); Pkg.clone(pwd()); Pkg.build("Word2Vec")'
-  - julia -e '(VERSION >= v"0.7" && using Pkg); Pkg.test("Word2Vec"; coverage=true)'
 after_success:
-  - julia -e '(VERSION >= v"0.7" && using Pkg); cd(Pkg.dir("Word2Vec")); Pkg.add("Coverage"); using Coverage; Codecov.submit(process_folder())'
+  # push coverage results to Coveralls
+  - julia -e '(VERSION >= v"0.7" && using Pkg); Pkg.add("Coverage"); cd(Pkg.dir("Word2Vec")); using Coverage; Coveralls.submit(process_folder()); Codecov.submit(process_folder())'
