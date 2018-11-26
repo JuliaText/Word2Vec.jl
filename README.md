@@ -2,16 +2,16 @@
 
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
 [![Build Status](https://travis-ci.org/zgornel/Word2Vec.jl.svg?branch=latest)](https://travis-ci.org/zgornel/Word2Vec.jl)
-[![Coverage Status](https://coveralls.io/repos/github/zgornel/Word2Vec.jl/badge.svg?branch=latest)](https://coveralls.io/github/zgornel/Word2Vec.jl?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/zgornel/Word2Vec.jl/badge.svg?branch=latest)](https://coveralls.io/github/zgornel/Word2Vec.jl?branch=latest)
 
 
 Julia interface to [word2vec](https://code.google.com/p/word2vec/)
 
 Word2Vec takes a text corpus as input and produces the word vectors as
 output. Training is done using the original C code, other
-functionalities are pure Julia. See [demo](http://nbviewer.ipython.org/github/weijianzhang/Word2Vec.jl/blob/master/examples/demo.ipynb) for more details.
+functionalities are pure Julia. See [demo](http://nbviewer.ipython.org/github/zgornel/Word2Vec.jl/blob/latest/examples/demo.ipynb) for more details.
 
-* [Release Notes](https://github.com/weijianzhang/Word2Vec.jl/blob/master/NEWS.md)
+* [Release Notes](https://github.com/zgornel/Word2Vec.jl/blob/latest/NEWS.md)
 
 ## Installation
 
@@ -24,7 +24,7 @@ Pkg.add("Word2Vec")
 ## Functions
 
 All exported functions are documented, i.e., we can type `? functionname`
-to get help. For a list of functions, see [here](https://github.com/weijianzhang/Word2Vec.jl/blob/master/doc/README.md).
+to get help. For a list of functions, see [here](https://github.com/zgornel/Word2Vec.jl/blob/latest/doc/README.md).
 
 ## Examples
 
@@ -113,4 +113,4 @@ The design of the package is inspired by Daniel Rodriguez
 
 ## Reporting Bugs
 
-Please [file an issue](https://github.com/weijianzhang/Word2Vec.jl/issues/new) to report a bug or request a feature.
+Please [file an issue](https://github.com/zgornel/Word2Vec.jl/issues/new) to report a bug or request a feature.
