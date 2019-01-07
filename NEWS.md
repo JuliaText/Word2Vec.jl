@@ -1,6 +1,8 @@
 ## Word2Vec Release Notes
 
-Removed Julia <0.7 compatibility
+v0.1.0
+------
+Julia 1.0 support
 Typing improvements
 Google pre-trained models support
 
