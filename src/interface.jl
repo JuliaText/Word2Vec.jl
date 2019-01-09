@@ -51,7 +51,7 @@ function word2vec(train::AbstractString, output::AbstractString;
                   save_vocab=Nothing(), read_vocab=Nothing(),
                   verbose::Bool=false)
 
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2vec")
     parameters = AbstractString[]
     args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
@@ -131,7 +131,7 @@ function word2clusters(train::AbstractString, output::AbstractString,
                        debug::Int=2, binary::Int=0, cbow::Int=1,
                        save_vocab=Nothing(), read_vocab=Nothing(),
                        verbose::Bool=false)
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2vec")
     parameters = AbstractString[]
     args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
@@ -173,7 +173,7 @@ end
 """
 function word2phrase(train::AbstractString, output::AbstractString;
                      min_count::Int=5, threshold::Int=100, debug::Int=2)
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2phrase")
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2phrase")
     parameters = AbstractString[]
     args = ["-train", "-output", "-min-count", "-threshold", "-debug"]
     values = [train, output, min_count, threshold, debug]
