@@ -1,5 +1,5 @@
 """
-     word2vec(train, output; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=12, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)
+     word2vec(train, output; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=12, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Nothing(), read_vocab=Nothing(), verbose=false,)
 
     Parameters for training:
         train <file>
@@ -48,10 +48,10 @@ function word2vec(train::AbstractString, output::AbstractString;
                   hs::Int=0, negative::Int=5, threads::Int=12, iter::Int=5, 
                   min_count::Int=5, alpha::AbstractFloat=0.025,
                   debug::Int=2, binary::Int=0, cbow::Int=1, 
-                  save_vocab=Void(), read_vocab=Void(), 
+                  save_vocab=Nothing(), read_vocab=Nothing(),
                   verbose::Bool=false)
 
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2vec")
     parameters = AbstractString[]
     args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
@@ -63,11 +63,11 @@ function word2vec(train::AbstractString, output::AbstractString;
         push!(parameters, arg)
         push!(parameters, string(value))
     end
-    if save_vocab != Void()
+    if save_vocab != Nothing()
         push!(parameters, "-save-vocab")
         push!(parameters, string(save_vocab))
     end
-    if read_vocab != Void()
+    if read_vocab != Nothing()
         push!(parameters, "-read-vocab")
         push!(parameters, string(read_vocab))
     end        
@@ -76,7 +76,7 @@ end
 
 
 """
-     word2cluster(train, output, classes; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=1, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Void(), read_vocab=Void(), verbose=false,)
+     word2cluster(train, output, classes; size=100, window=5, sample=1e-3, hs=0,  negative=5, threads=1, iter=5, min_count=5, alpha=0.025, debug=2, binary=1, cbow=1, save_vocal=Nothing(), read_vocab=Nothing(), verbose=false)
 
     Parameters for training:
         train <file>
@@ -101,19 +101,19 @@ end
         iter <Int>
             Run more training iterations (default 5)
         min_count <Int>
-            This will discard words that appear less than <Int> times; default
-            is 5
+            This will discard words that appear less than <Int> times
+            (default 5)
         alpha <AbstractFloat>
             Set the starting learning rate; default is 0.025
         classes <Int>
-            Output word classes rather than word vectors; default number of 
-            classes is 0.    
+            Number of word classes; if 0, output word classes rather than
+            word vectors (default 0)
         debug <Int>
             Set the debug mode (default = 2 = more info during training)
         binary <Int>
             Save the resulting vectors in binary moded; default is 0 (off)
         cbow <Int>
-            Use the continuous back of words model; default is 1 (skip-gram
+            Use the continuous back of words model; default is 1 (0 for skip-gram
             model)
         save_vocab <file>
             The vocabulary will be saved to <file>
@@ -129,9 +129,9 @@ function word2clusters(train::AbstractString, output::AbstractString,
                        negative::Int=5, threads::Int=1, iter::Int=5,
                        min_count::Int=5, alpha::AbstractFloat=0.025,
                        debug::Int=2, binary::Int=0, cbow::Int=1,
-                       save_vocab=Void(), read_vocab=Void(), 
+                       save_vocab=Nothing(), read_vocab=Nothing(),
                        verbose::Bool=false)
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2vec")
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2vec")
     parameters = AbstractString[]
     args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
@@ -142,11 +142,11 @@ function word2clusters(train::AbstractString, output::AbstractString,
         push!(parameters, arg)
         push!(parameters, string(value))
     end
-    if save_vocab != Void()
+    if save_vocab != Nothing()
         push!(parameters, "-save-vocab")
         push!(parameters, string(save_vocab))
     end
-    if read_vocab != Void()
+    if read_vocab != Nothing()
         push!(parameters, "-read-vocab")
         push!(parameters, string(read_vocab))
     end 
@@ -173,7 +173,7 @@ end
 """
 function word2phrase(train::AbstractString, output::AbstractString;
                      min_count::Int=5, threshold::Int=100, debug::Int=2)
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "./word2phrase")
+    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2phrase")
     parameters = AbstractString[]
     args = ["-train", "-output", "-min-count", "-threshold", "-debug"]
     values = [train, output, min_count, threshold, debug]

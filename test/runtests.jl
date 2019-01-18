@@ -1,7 +1,11 @@
 using Word2Vec
-using Base.Test
 
-include("train.jl") 
-include("model.jl")
-#include("load.jl")
-println(":)")
+using Test
+
+@testset "Model training" begin
+    include("train.jl")
+end
+
+@testset "Model API" begin
+    include("model.jl")
+end

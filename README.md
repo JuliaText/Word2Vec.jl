@@ -1,15 +1,17 @@
 # Word2Vec
 
-[![Build Status](https://travis-ci.org/weijianzhang/Word2Vec.jl.svg?branch=master)](https://travis-ci.org/weijianzhang/Word2Vec.jl)
-[![codecov.io](https://codecov.io/github/weijianzhang/Word2Vec.jl/coverage.svg?branch=master)](https://codecov.io/github/weijianzhang/Word2Vec.jl?branch=master)
+[![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+[![Build Status](https://travis-ci.org/JuliaText/Word2Vec.jl.svg?branch=master)](https://travis-ci.org/JuliaText/Word2Vec.jl)
+[![Coverage Status](https://coveralls.io/repos/github/JuliaText/Word2Vec.jl/badge.svg?branch=master)](https://coveralls.io/github/JuliaText/Word2Vec.jl?branch=master)
+
 
 Julia interface to [word2vec](https://code.google.com/p/word2vec/)
 
 Word2Vec takes a text corpus as input and produces the word vectors as
 output. Training is done using the original C code, other
-functionalities are pure Julia. See [demo](http://nbviewer.ipython.org/github/weijianzhang/Word2Vec.jl/blob/master/examples/demo.ipynb) for more details.
+functionalities are pure Julia. See [demo](http://nbviewer.ipython.org/github/JuliaText/Word2Vec.jl/blob/master/examples/demo.ipynb) for more details.
 
-* [Release Notes](https://github.com/weijianzhang/Word2Vec.jl/blob/master/NEWS.md)
+* [Release Notes](https://github.com/JuliaText/Word2Vec.jl/blob/master/NEWS.md)
 
 ## Installation
 
@@ -22,7 +24,7 @@ Pkg.add("Word2Vec")
 ## Functions
 
 All exported functions are documented, i.e., we can type `? functionname`
-to get help. For a list of functions, see [here](https://github.com/weijianzhang/Word2Vec.jl/blob/master/doc/README.md).
+to get help. For a list of functions, see [here](https://github.com/JuliaText/Word2Vec.jl/blob/master/doc/README.md).
 
 ## Examples
 
@@ -42,16 +44,23 @@ Alpha: 0.000002  Progress: 100.04%  Words/thread/sec: 350.44k
 Now we can import the word vectors ``text8-vec.txt`` to Julia.
 
 ```julia
-julia> model = wordvectors("text8-vec.txt")
-WordVectors 71291 words, 100-element vectors
+julia> model = wordvectors("./text8-vec")
+WordVectors 71291 words, 100-element Float64 vectors
 ```
+
 The vector representation of a word can be obtained using
 ``get_vector``.
 
 ```julia
 julia> get_vector(model, "book")'
-1x100 Array{AbstractFloat,2}:
- 0.0371017  -0.025825  0.0345965  …  0.0148279  0.0223793  -0.0312822
+100-element Array{Float64,1}:
+ -0.05446138539336186
+  0.001090934639284009
+  0.06498087707990222
+  ⋮
+ -0.0024113040415322516
+  0.04755140828570571
+  0.039764719065723826
 ```
 
 The cosine similarity of ``book``, for example, can be computed using
@@ -59,17 +68,17 @@ The cosine similarity of ``book``, for example, can be computed using
 
 ```julia
 julia> cosine_similar_words(model, "book")
-10-element Array{AbstractString,1}:
- "book"   
- "books"  
- "diary"  
- "story"  
+10-element Array{String,1}:
+ "book"
+ "books"
+ "diary"
+ "story"
  "chapter"
- "novel"  
- "poem"   
+ "novel"
  "preface"
- "bible"  
- "genesis"
+ "poem"
+ "tale"
+ "bible"
 ```
 
 Word vectors have many interesting properties. For example, 
@@ -77,13 +86,12 @@ Word vectors have many interesting properties. For example,
 ``vector("queen")``.
 
 ```julia
-julia> analogy_words(model, ["king", "woman"], ["man"])
-5-element Array{AbstractString,1}:
- "queen"    
- "empress"  
- "elizabeth"
- "throne"   
- "princess" 
+5-element Array{String,1}:
+ "queen"
+ "empress"
+ "prince"
+ "princess"
+ "throne"
 ```
 
 ## References
@@ -111,4 +119,4 @@ The design of the package is inspired by Daniel Rodriguez
 
 ## Reporting Bugs
 
-Please [file an issue](https://github.com/weijianzhang/Word2Vec.jl/issues/new) to report a bug or request a feature.
+Please [file an issue](https://github.com/JuliaText/Word2Vec.jl/issues/new) to report a bug or request a feature.

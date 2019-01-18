@@ -1,6 +1,6 @@
 # test various training parameters
 
-bigdata = joinpath(dirname(@__FILE__),"..", "data", "big.txt")
+bigdata = joinpath("..", "data", "big.txt")
 
 vector_size = rand(100:300)
 window = rand(1:5)
