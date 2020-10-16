@@ -2,7 +2,6 @@ language: julia
 os:
   - linux
   - osx
-  - windows
 julia:
   - 1
   - 1.0
@@ -17,11 +16,7 @@ matrix:
   exclude:
     - os: osx
       julia: 1.0
-    - os: windows
-      julia: 1.0
     - os: osx
-      julia: nightly
-    - os: windows
       julia: nightly
   fast_finish: true
 after_success:
