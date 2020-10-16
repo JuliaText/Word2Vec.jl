@@ -151,7 +151,7 @@ end
 
 
 """
-    wordvectors(filename [,type=Float64][; kind=:text, skip=false, normalize=true])
+    wordvectors(filename [,type=Float64][; kind=:text, skip=false, normalize=true, fasttext=false])
 
 Generate a WordVectors type object from a file.
 
@@ -165,17 +165,21 @@ or binary (`:binary`); default `:text`
   * `skip::Bool` in binary embeddings files specifies whether the newline
 byte is missing or not (use `true` for Google pre-trained models); default `false`
   * `normalize:Bool` specifies whether to normalize the embedding vectors
-i.e. return unit vectors; default true
+i.e. return unit vectors; default `true`
+  * `fasttext::Bool` setting to `true` fixes a bug that occurs when loading
+FastText generated text embeddings by not stripping the line before parsing.
+The option is ignored for the binary format; default `false`
 """
 function wordvectors(filename::AbstractString,
                      ::Type{T};
                      kind::Symbol=:text,
                      skip::Bool=false,
-                     normalize::Bool=true) where T <: Real
+                     normalize::Bool=true,
+                     fasttext::Bool=false) where T <: Real
     if kind == :binary
         return _from_binary(T, filename, skip, normalize)
     elseif kind == :text
-        return _from_text(T, filename, normalize)
+        return _from_text(T, filename, normalize, fasttext)
     else
         throw(ArgumentError("Unknown embedding file kind $(kind)"))
     end
@@ -185,8 +189,10 @@ end
 wordvectors(filename::AbstractString;
             kind::Symbol=:text,
             skip::Bool=false,
-            normalize::Bool=true) =
-    wordvectors(filename, Float64, kind=kind, normalize=normalize)
+            normalize::Bool=true,
+            fasttext::Bool=false) =
+    wordvectors(filename, Float64, kind=kind,
+                normalize=normalize, fasttext=fasttext)
 
 
 # Generate a WordVectors object from binary file
@@ -215,14 +221,15 @@ function _from_binary(::Type{T},
 end
 
 # Generate a WordVectors object from text file
-function _from_text(::Type{T}, filename::AbstractString, normalize::Bool=true) where T<:Real
+function _from_text(::Type{T}, filename::AbstractString, normalize::Bool=true,
+                    fasttext::Bool=false) where T<:Real
     open(filename) do f
         header = strip(readline(f))
         vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
         vocab = Vector{String}(undef, vocab_size)
         vectors = Matrix{T}(undef, vector_size, vocab_size)
         for (i, line) in enumerate(readlines(f))
-            line = strip(line)
+            !fasttext && (line = strip(line))
             parts = split(line, ' ')
             word = parts[1]
             vector = map(x-> parse(T, x), parts[2:end])
