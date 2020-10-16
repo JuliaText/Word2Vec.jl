@@ -1,5 +1,5 @@
 name = "Word2Vec"
-uuid = "07718ad2-0e07-11eb-1044-2f7de2a2b708"
+uuid = "c64b6f0f-98cd-51d1-af78-58ae84944834"
 author = ["Word2Vec.jl contributors"]
 version = "0.5.1"
 
