@@ -51,7 +51,6 @@ function word2vec(train::AbstractString, output::AbstractString;
                   save_vocab=Nothing(), read_vocab=Nothing(),
                   verbose::Bool=false)
 
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2vec")
     parameters = AbstractString[]
     args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
@@ -71,7 +70,9 @@ function word2vec(train::AbstractString, output::AbstractString;
         push!(parameters, "-read-vocab")
         push!(parameters, string(read_vocab))
     end        
-    run(`$(command) $(parameters)`)
+    Word2Vec_jll.word2vec() do command
+        run(`$(command) $(parameters)`)
+    end
 end
 
 
@@ -132,7 +133,7 @@ function word2clusters(train::AbstractString, output::AbstractString,
                        debug::Int=2, binary::Int=0, cbow::Int=1,
                        save_vocab=Nothing(), read_vocab=Nothing(),
                        verbose::Bool=false)
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2vec")
+
     parameters = AbstractString[]
     args = ["-train", "-output", "-size", "-window", "-sample", "-hs",
             "-negative", "-threads", "-iter", "-min-count", "-alpha", 
@@ -150,8 +151,10 @@ function word2clusters(train::AbstractString, output::AbstractString,
     if read_vocab != Nothing()
         push!(parameters, "-read-vocab")
         push!(parameters, string(read_vocab))
-    end 
-    run(`$(command) $(parameters)`)
+    end
+    Word2Vec_jll.word2vec() do command
+        run(`$(command) $(parameters)`)
+    end
 end
 
 """
@@ -174,7 +177,6 @@ end
 """
 function word2phrase(train::AbstractString, output::AbstractString;
                      min_count::Int=5, threshold::Int=100, debug::Int=2)
-    command = joinpath(dirname(@__FILE__), "..", "deps", "src", "word2vec-c", "word2phrase")
     parameters = AbstractString[]
     args = ["-train", "-output", "-min-count", "-threshold", "-debug"]
     values = [train, output, min_count, threshold, debug]
@@ -182,5 +184,7 @@ function word2phrase(train::AbstractString, output::AbstractString;
         push!(parameters, arg)
         push!(parameters, string(value))
     end
-    run(`$(command) $(parameters)`)
+    Word2Vec_jll.word2phrase() do command
+        run(`$(command) $(parameters)`)
+    end
 end
