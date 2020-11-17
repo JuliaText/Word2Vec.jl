@@ -2,6 +2,7 @@
 *.jl.mem
 
 deps/
+Manifest.toml
 test/bigclus.txt
 test/bigvecs.bin
 test/bigvecs.txt

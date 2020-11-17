@@ -3,6 +3,7 @@ module Word2Vec
 import Base: show, size
 using LinearAlgebra
 using Statistics
+import Word2Vec_jll
 
 export
     # types

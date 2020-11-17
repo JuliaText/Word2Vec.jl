@@ -1,8 +1,11 @@
 # Word2Vec
 
 [![License](http://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
-[![Build Status](https://travis-ci.org/JuliaText/Word2Vec.jl.svg?branch=master)](https://travis-ci.org/JuliaText/Word2Vec.jl)
-[![Coverage Status](https://coveralls.io/repos/github/JuliaText/Word2Vec.jl/badge.svg?branch=master)](https://coveralls.io/github/JuliaText/Word2Vec.jl?branch=master)
+[![CI](https://github.com/juliatext/Word2Vec.jl/workflows/CI/badge.svg?event=push&branch=master)](https://github.com/JuliaText/Word2Vec.jl/actions?query=workflow%3ACI)
+[![version](https://juliahub.com/docs/Word2Vec/version.svg)](https://juliahub.com/ui/Packages/Word2Vec/x04dc)
+[![pkgeval](https://juliahub.com/docs/Word2Vec/pkgeval.svg)](https://juliahub.com/ui/Packages/Word2Vec/x04dc)
+[![deps](https://juliahub.com/docs/Word2Vec/deps.svg)](https://juliahub.com/ui/Packages/Word2Vec/x04dc?t=2)
+
 
 
 Julia interface to [word2vec](https://code.google.com/p/word2vec/)
