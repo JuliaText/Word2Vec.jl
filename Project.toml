@@ -1,7 +1,7 @@
 name = "Word2Vec"
 uuid = "c64b6f0f-98cd-51d1-af78-58ae84944834"
 author = ["Word2Vec.jl contributors"]
-version = "0.5.2"
+version = "0.5.3"
 
 [deps]
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
