@@ -166,6 +166,7 @@ or binary (`:binary`); default `:text`
 byte is missing or not (use `true` for Google pre-trained models); default `false`
   * `normalize:Bool` specifies whether to normalize the embedding vectors
 i.e. return unit vectors; default `true`
+  * `delim:Char` delimiter; default `' '`
   * `fasttext::Bool` setting to `true` fixes a bug that occurs when loading
 FastText generated text embeddings by not stripping the line before parsing.
 The option is ignored for the binary format; default `false`
@@ -175,11 +176,12 @@ function wordvectors(filename::AbstractString,
                      kind::Symbol=:text,
                      skip::Bool=false,
                      normalize::Bool=true,
+                     delim::Char=' ',
                      fasttext::Bool=false) where T <: Real
     if kind == :binary
-        return _from_binary(T, filename, skip, normalize)
+        return _from_binary(T, filename, skip, normalize, delim)
     elseif kind == :text
-        return _from_text(T, filename, normalize, fasttext)
+        return _from_text(T, filename, normalize, delim, fasttext)
     else
         throw(ArgumentError("Unknown embedding file kind $(kind)"))
     end
@@ -190,25 +192,27 @@ wordvectors(filename::AbstractString;
             kind::Symbol=:text,
             skip::Bool=false,
             normalize::Bool=true,
+            delim::Char=' ',
             fasttext::Bool=false) =
     wordvectors(filename, Float64, kind=kind,
-                normalize=normalize, fasttext=fasttext)
+                normalize=normalize, delim=delim, fasttext=fasttext)
 
 
 # Generate a WordVectors object from binary file
 function _from_binary(::Type{T},
                       filename::AbstractString,
                       skip::Bool=true,
-                      normalize::Bool=true) where T<:Real
+                      normalize::Bool=true,
+                      delim::Char=' ') where T<:Real
     sb = ifelse(skip, 0, 1)
     open(filename) do f
         header = strip(readline(f))
-        vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
+        vocab_size,vector_size = map(x -> parse(Int, x), split(header, delim))
         vocab = Vector{String}(undef, vocab_size)
         vectors = zeros(T, vector_size, vocab_size)
         binary_length = sizeof(Float32) * vector_size
         for i in 1:vocab_size
-            vocab[i] = strip(readuntil(f, ' '))
+            vocab[i] = strip(readuntil(f, delim))
             vector = reinterpret(Float32, read(f, binary_length))
             if normalize
                 vector = vector ./ norm(vector)  # unit vector
@@ -221,16 +225,19 @@ function _from_binary(::Type{T},
 end
 
 # Generate a WordVectors object from text file
-function _from_text(::Type{T}, filename::AbstractString, normalize::Bool=true,
+function _from_text(::Type{T},
+                    filename::AbstractString,
+                    normalize::Bool=true,
+                    delim::Char=' ',
                     fasttext::Bool=false) where T<:Real
     open(filename) do f
         header = strip(readline(f))
-        vocab_size,vector_size = map(x -> parse(Int, x), split(header, ' '))
+        vocab_size,vector_size = map(x -> parse(Int, x), split(header, delim))
         vocab = Vector{String}(undef, vocab_size)
         vectors = Matrix{T}(undef, vector_size, vocab_size)
         for (i, line) in enumerate(readlines(f))
             !fasttext && (line = strip(line))
-            parts = split(line, ' ')
+            parts = split(line, delim)
             word = parts[1]
             vector = map(x-> parse(T, x), parts[2:end])
             vocab[i] = word
